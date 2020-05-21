@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_DATA } from '../actions/types';
+import { FETCH_DATA, FILTER_COUNTRIES } from '../actions/types';
 
 let axiosConfig = {
     headers: {'Access-Control-Allow-Origin': '*'}
@@ -15,6 +15,11 @@ export const fetchData = () => dispatch =>{
     .catch(
         error => console.error(error)
     );
-
 }
 
+
+export const filterCountries = (country,enabled) => dispatch => {
+
+    dispatch({type:FILTER_COUNTRIES, payload:{country, enabled} })
+    
+}

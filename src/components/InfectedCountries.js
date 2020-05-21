@@ -11,11 +11,6 @@ class InfectedCountries extends Component {
 
     render() {
         if(this.props.data != null){
-            console.log('data', this.props.data);
-            // return (
-            //     <p>place holder</p>
-
-            // );
 
             return (
                 <LineChart data={this.props.data} />
@@ -31,7 +26,7 @@ class InfectedCountries extends Component {
 function mapStateToProps(state) {
     console.log('state', state);
     return{
-        data: state.data
+        data: state.graphData
     }
 }
 
