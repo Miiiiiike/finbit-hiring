@@ -1,4 +1,4 @@
-import { FETCH_DATA, FILTER_COUNTRIES } from '../actions/types';
+import { FETCH_DATA, FILTER_COUNTRIES, FILTER_BY_DATE } from '../actions/types';
 
 const initialState = {
     allData: [
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
         countryData = {
             id: countryData.country,
             data: countryData.records.map(record=>{
-                return { x: record.day, y:record.new}
+                return { x: record.day, y:record.new, day:record.day}
             })
         }
         
@@ -74,6 +74,23 @@ export default (state = initialState, action) => {
             }
         }
 
+    case FILTER_BY_DATE:
+        let{start,end} = action.payload;
+
+        console.log('filter by date called in reducer');
+        console.log(start, end)
+
+        let filteredGraphData = state.graphData.map((entry)=>{
+            entry.data.filter((record)=>{
+                return record.day >=start && record.day <= end   
+            });
+        });
+
+
+        return {
+            ...state,
+            graphData:filteredGraphData
+        }
 
     default:
         return state

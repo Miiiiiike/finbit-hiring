@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
-import { filterCountries } from '../actions/caseDataActions';
+import { filterCountries, filterByDate } from '../actions/caseDataActions';
 
 class CountryFilter extends Component {
+    
 
-    onChanged(e){
+    onCheckChanged(e){
         this.props.filterCountries(e.target.name, e.target.checked);
         console.log((e.target.name, e.target.checked))
     }
+    
     
 
     render() {
@@ -15,7 +17,7 @@ class CountryFilter extends Component {
             return this.props.countries.map((country)=>{
                 return (
                     <div>
-                    <label><input type="checkbox" className="mx-2" onChange={this.onChanged.bind(this)} name={country}/> {country}</label>
+                    <label><input type="checkbox" className="mx-2" onChange={this.onCheckChanged.bind(this)} name={country}/> {country}</label>
 
                     </div>
                 );
@@ -38,4 +40,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, {filterCountries})(CountryFilter);
+export default connect(mapStateToProps, {filterCountries, filterByDate})(CountryFilter);
