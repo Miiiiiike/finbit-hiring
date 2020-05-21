@@ -1,11 +1,24 @@
 import React from "react";
 import LineChart from "./core/LineChart";
 import PieChart from "./core/PieChart";
+import 'bootstrap/dist/css/bootstrap.css';
 import "./style.css";
+import InfectedCountries from './components/InfectedCountries';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const App = (props) => {
-  // Your code goes here
-  return <p>Good luck</p>;
+  return(
+    <Provider store={store}>
+      
+      <InfectedCountries  />
+
+
+    </Provider>
+  );
 };
+
+
+
 
 export default App;
