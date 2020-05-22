@@ -14,14 +14,15 @@ class CountryFilter extends Component {
 
     render() {
         if(this.props.countries != null){
-            return this.props.countries.map((country)=>{
-                return (
-                    <div key={country.name}>
-                    <label><input type="checkbox" className="mx-2" onChange={this.onCheckChanged.bind(this)} name={country}/> {country}</label>
-
-                    </div>
-                );
-            });
+            return (
+                <div>
+                    <h1>Countries</h1>
+                    { this.props.countries.map(
+                        (country)=> (<label key ={country.name}><input type="checkbox" className="mx-2 " onChange={this.onCheckChanged.bind(this)} name={country}/> {country}</label>) 
+                        )
+                    }
+                </div>
+            );
         }else{
             return(
                 <p>wating for data</p>

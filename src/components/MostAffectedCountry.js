@@ -20,7 +20,10 @@ class MostAffectedCountry extends Component {
             ) ; 
         }else{
             return (
-                <p>Waiting for data</p>
+                <div>
+                    <h1>Most Affected Country</h1>
+                    <p>Please enable the countries and select the date</p>
+                </div>
             );
         }
     }

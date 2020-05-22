@@ -38,6 +38,7 @@ class DateFilter extends Component {
         
         return (
             <div>
+                <h1>Dates</h1>
                 <label>
                     Start
                     <select name="start" className="form-control" onChange={this.onSelectChanged.bind(this)}>
