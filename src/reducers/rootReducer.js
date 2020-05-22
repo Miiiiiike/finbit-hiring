@@ -130,7 +130,7 @@ export default (state = initialState, action) => {
                 return {
                     ...state,
                     graphData: state.graphData.filter((data)=> data.id !== entry.country),
-                    mostAffectedCountry: getMostAffectedCountry(state.graphData.filter((data)=> data.id !== entry.country))
+                    mostAffectedCountry: getMostAffectedCountry(state.graphData.filter((data)=> data.id !== entry.country))['name']
                 }
         }else{
             return{
@@ -142,7 +142,7 @@ export default (state = initialState, action) => {
                 mostAffectedCountry: getMostAffectedCountry([
                     ...state.graphData,
                     countryData
-                ])
+                ])['name']
 
             }
         }

@@ -10,7 +10,7 @@ class MostAffectedCountry extends Component {
     }
 
     render() {
-        if(this.props.pieChartData != null){
+        if(this.props.pieChartData != null && this.props.country != null){
 
             return (
                 <div>
