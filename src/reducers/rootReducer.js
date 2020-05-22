@@ -1,20 +1,6 @@
 import { FETCH_DATA, FILTER_COUNTRIES, FILTER_BY_DATE } from '../actions/types';
 
-const initialState = {
-    allData: [
 
-    ],
-    graphData:[
-
-    ],
-    allCountries:[
-
-    ],
-    mostAffectedCountry:'',
-    mostAffectedCountryGraphData:[
-
-    ]
-}
 
 function mapDataToLineGraphData(data){
     return data.map((entry)=>{
@@ -27,21 +13,30 @@ function mapDataToLineGraphData(data){
     })
 }
 
-function filterGraphDataByDate(data, start, end){
+function filterGraphDataByDate(data, start, end, enabledCountries){
     let graphData = mapDataToLineGraphData(data);
+
     return graphData.map((entry)=>{
-        let filteredEntries = entry.data.filter((record)=>{
-            return record.day >=start && record.day <= end   
-        });
-        return {
-            id: entry.id,
-            data:[
-                ...filteredEntries
-            ]
-        }   
+        return filterCountryDataByDate(entry, start, end);
 
     });
 }
+
+
+function filterCountryDataByDate(entry, start, end){
+    let filteredEntries = entry.data.filter((record)=>{
+        return record.day >=start && record.day <= end   
+    });
+    return {
+        id: entry.id,
+        data:[
+            ...filteredEntries
+        ]
+    }   
+}
+
+
+
 
 
 function getMostAffectedCountry(data, state){
@@ -51,7 +46,7 @@ function getMostAffectedCountry(data, state){
     var numberOfInfectionsToCountriesMap = {};
 
     graphData.forEach((entry)=>{
-        // console.log('reduced value', );
+        console.log('entry', entry);
 
         let reducedValue = entry.data.reduce((sum,current,i)=> {
             return {y: sum.y + parseInt(current.y)}
@@ -96,7 +91,7 @@ export default (state = initialState, action) => {
 
     case FETCH_DATA:
         console.log('reducer called', action.payload)
-
+        console.log('state',state);
         return { 
             ...state, 
             allData : action.payload,
@@ -108,14 +103,10 @@ export default (state = initialState, action) => {
         }
     
     case FILTER_COUNTRIES:
-        console.log('state',state);
         
         let entry = action.payload
-        console.log('entry', entry)
 
-        console.log('alldata', state.allData);
         let countryData = state.allData.find((e)=> e.country === entry.country)
-        console.log('countryData',countryData);
 
 
         countryData = {
@@ -126,9 +117,11 @@ export default (state = initialState, action) => {
         }
         
         
+        
         if(!entry.enabled){
                 return {
                     ...state,
+                    enabledCountries: state.enabledCountries.filter((country)=> country !== entry.country),
                     graphData: state.graphData.filter((data)=> data.id !== entry.country),
                     mostAffectedCountry: getMostAffectedCountry(state.graphData.filter((data)=> data.id !== entry.country))['name']
                 }
@@ -137,7 +130,11 @@ export default (state = initialState, action) => {
                 ...state,
                 graphData: [
                     ...state.graphData,
-                    countryData
+                    filterCountryDataByDate(countryData, state.startDate, state.endDate)
+                ],
+                enabledCountries:[
+                    ...state.enabledCountries,
+                    entry.country
                 ],
                 mostAffectedCountry: getMostAffectedCountry([
                     ...state.graphData,
@@ -167,7 +164,7 @@ export default (state = initialState, action) => {
 
         return {
             ...state,
-            graphData: filterGraphDataByDate(state.allData, start,end),
+            graphData: filterGraphDataByDate(state.allData, start,end, state.enabledCountries).filter((entry)=>state.enabledCountries.includes(entry.id) ),
             mostAffectedCountry: mostAffectedCountry,
             pieChartData: [
                 {
@@ -185,7 +182,9 @@ export default (state = initialState, action) => {
                     label: "Recoveries",
                     value: currentDayData.death,
                 } 
-            ]  
+            ],
+            startDate:start,
+            endDate:end 
         }
 
     default:
