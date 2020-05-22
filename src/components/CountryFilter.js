@@ -16,7 +16,7 @@ class CountryFilter extends Component {
         if(this.props.countries != null){
             return this.props.countries.map((country)=>{
                 return (
-                    <div>
+                    <div key={country.name}>
                     <label><input type="checkbox" className="mx-2" onChange={this.onCheckChanged.bind(this)} name={country}/> {country}</label>
 
                     </div>

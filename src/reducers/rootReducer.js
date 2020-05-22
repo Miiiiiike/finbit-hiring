@@ -9,7 +9,38 @@ const initialState = {
     ],
     allCountries:[
 
+    ],
+    mostAffectedCountry:'',
+    mostAffectedCountryGraphData:[
+
     ]
+}
+
+function mapDataToLineGraphData(data){
+    return data.map((entry)=>{
+        return {
+            id: entry.country,
+            data: entry.records.map(record=>{
+                return { x: record.day, y:record.new, day:record.day}
+            })
+        }
+    })
+}
+
+function filterGraphDataByDate(data){
+    let graphData = mapDataToLineGraphData(data);
+    return graphData.map((entry)=>{
+        let filteredEntries = entry.data.filter((record)=>{
+            return record.day >=start && record.day <= end   
+        });
+        return {
+            id: entry.id,
+            data:[
+                ...filteredEntries
+            ]
+        }   
+
+    });
 }
 
 export default (state = initialState, action) => {
@@ -39,18 +70,6 @@ export default (state = initialState, action) => {
         console.log('countryData',countryData);
 
 
-        // action.payload.map((entry)=>{
-            //     return {
-            //         id:entry.country,
-            //         data: entry.records.map(record=>{
-            //                 return {
-            //                     x: record.day,
-            //                     y: record.new
-            //                 }
-            //             }),
-            //         enabled:true
-            //     }
-            // }),
         countryData = {
             id: countryData.country,
             data: countryData.records.map(record=>{
@@ -77,14 +96,24 @@ export default (state = initialState, action) => {
     case FILTER_BY_DATE:
         let{start,end} = action.payload;
 
+        start = parseInt(start)
+        end = parseInt(end)
         console.log('filter by date called in reducer');
         console.log(start, end)
 
         let filteredGraphData = state.graphData.map((entry)=>{
-            entry.data.filter((record)=>{
+            let filteredEntries = entry.data.filter((record)=>{
                 return record.day >=start && record.day <= end   
             });
+            return {
+                id: entry.id,
+                data:[
+                    ...filteredEntries
+                ]
+            }   
+
         });
+        console.log('filtered data', filteredGraphData);
 
 
         return {

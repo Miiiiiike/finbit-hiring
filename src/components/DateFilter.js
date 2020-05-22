@@ -16,14 +16,17 @@ class DateFilter extends Component {
 
     onSelectChanged(e){
         console.log(e.target.name,e.target.value);
-
+        
         this.setState(
             { 
                 [e.target.name]: e.target.value
-             }
+            },()=>{
+                console.log('state', this.state);
+                this.props.filterByDate(this.state.start,this.state.end)
+            }
         )
-            
-        this.props.filterByDate({start:this.state.start, end: this.state.end})
+        
+
 
     }
 
@@ -38,14 +41,14 @@ class DateFilter extends Component {
                 <label>
                     Start
                     <select name="start" className="form-control" onChange={this.onSelectChanged.bind(this)}>
-                        {range.map((i)=> (<option value= {i}>{i}</option>))}
+                        {range.map((i)=> (<option value= {i} key={i}>{i}</option>))}
                     </select>
                 </label>
                 
                 <label className="mx-4">
                     End
                     <select name="end" className="form-control" onChange={this.onSelectChanged.bind(this)}>
-                        {range.map((i)=> (<option value= {i}>{i}</option>))}
+                        {range.map((i)=> (<option value= {i} key={i}>{i}</option>))}
                         
                     </select>
                 </label>
