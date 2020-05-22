@@ -44,10 +44,52 @@ function filterGraphDataByDate(data, start, end){
 }
 
 
-function getMostAffectCountry(data){
-    let graphData = mapDataToLineGraphData(data);
+function getMostAffectedCountry(data){
+    // let graphData = mapDataToLineGraphData(data);
+    let graphData = data;
+
+    var numberOfInfectionsToCountriesMap = {};
+
+    graphData.forEach((entry)=>{
+        // console.log('reduced value', );
+
+        let reducedValue = entry.data.reduce((sum,current,i)=> {
+            return {y: sum.y + parseInt(current.y)}
+        })['y'];
+
+        console.log('reducedvalue', reducedValue);
+
+        numberOfInfectionsToCountriesMap =  {
+            ...numberOfInfectionsToCountriesMap,
+            [reducedValue]: entry.id
+            //infections: country name
+        };
+
+        
+
+        // numberOfInfectionsToCountriesMap[]
+
+    })
+
+    console.log('numberOfInfectionToCountriesMap');
+    console.log(numberOfInfectionsToCountriesMap);
+
+    let maxNumberOfInfections = Math.max(
+        ...Object.keys(numberOfInfectionsToCountriesMap).map((val) => parseInt(val))
+    )
+    console.log('keys' , Object.keys(numberOfInfectionsToCountriesMap));
     
+    let mostInfectedCountry = {
+        country: numberOfInfectionsToCountriesMap[maxNumberOfInfections],
+        infections: maxNumberOfInfections
+    };
+    console.log('mostInfectedCountry', mostInfectedCountry);
+
+    return mostInfectedCountry;
+
 }
+
+
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -126,7 +168,8 @@ export default (state = initialState, action) => {
 
         return {
             ...state,
-            graphData: filterGraphDataByDate(state.allData, start,end)
+            graphData: filterGraphDataByDate(state.allData, start,end),
+            mostAffectedCountry: getMostAffectedCountry(filterGraphDataByDate(state.allData, start,end))
         }
 
     default:
