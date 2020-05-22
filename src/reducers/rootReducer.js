@@ -46,13 +46,11 @@ function getMostAffectedCountry(data, state){
     var numberOfInfectionsToCountriesMap = {};
 
     graphData.forEach((entry)=>{
-        console.log('entry', entry);
 
         let reducedValue = entry.data.reduce((sum,current,i)=> {
             return {y: sum.y + parseInt(current.y)}
         })['y'];
 
-        console.log('reducedvalue', reducedValue);
 
         numberOfInfectionsToCountriesMap =  {
             ...numberOfInfectionsToCountriesMap,
@@ -66,19 +64,15 @@ function getMostAffectedCountry(data, state){
 
     })
 
-    console.log('numberOfInfectionToCountriesMap');
-    console.log(numberOfInfectionsToCountriesMap);
 
     let maxNumberOfInfections = Math.max(
         ...Object.keys(numberOfInfectionsToCountriesMap).map((val) => parseInt(val))
     )
-    console.log('keys' , Object.keys(numberOfInfectionsToCountriesMap));
     
     let mostInfectedCountry = {
         name: numberOfInfectionsToCountriesMap[maxNumberOfInfections],
         infections: maxNumberOfInfections
     };
-    console.log('mostInfectedCountry', mostInfectedCountry);
 
     return mostInfectedCountry;
 
@@ -90,8 +84,6 @@ export default (state = initialState, action) => {
     switch (action.type) {
 
     case FETCH_DATA:
-        console.log('reducer called', action.payload)
-        console.log('state',state);
         return { 
             ...state, 
             allData : action.payload,
@@ -151,16 +143,9 @@ export default (state = initialState, action) => {
         end = parseInt(end)
         
         let mostAffectedCountry = getMostAffectedCountry(filterGraphDataByDate(state.allData, start,end))['name'];
-
         let mostAffectedCountryRawData = state.allData.find((entry)=> entry.country === mostAffectedCountry);
-
-        console.log('most affected Country data', mostAffectedCountryRawData);
-        
-        console.log('day', end);
-
         let currentDayData = mostAffectedCountryRawData.records.find((entry)=> entry.day == end)
 
-        console.log('current Day Data', currentDayData);
 
         return {
             ...state,

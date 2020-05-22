@@ -24,7 +24,6 @@ class InfectedCountries extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log('state', state);
     return{
         data: state.graphData
     }

@@ -30,7 +30,6 @@ class MostAffectedCountry extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log('state', state);
     return{
         pieChartData: state.pieChartData,
         country:state.mostAffectedCountry

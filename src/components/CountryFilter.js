@@ -7,7 +7,6 @@ class CountryFilter extends Component {
 
     onCheckChanged(e){
         this.props.filterCountries(e.target.name, e.target.checked);
-        console.log((e.target.name, e.target.checked))
     }
     
     
