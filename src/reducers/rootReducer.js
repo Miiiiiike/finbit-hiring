@@ -44,7 +44,7 @@ function filterGraphDataByDate(data, start, end){
 }
 
 
-function getMostAffectedCountry(data){
+function getMostAffectedCountry(data, state){
     // let graphData = mapDataToLineGraphData(data);
     let graphData = data;
 
@@ -80,7 +80,7 @@ function getMostAffectedCountry(data){
     console.log('keys' , Object.keys(numberOfInfectionsToCountriesMap));
     
     let mostInfectedCountry = {
-        country: numberOfInfectionsToCountriesMap[maxNumberOfInfections],
+        name: numberOfInfectionsToCountriesMap[maxNumberOfInfections],
         infections: maxNumberOfInfections
     };
     console.log('mostInfectedCountry', mostInfectedCountry);
@@ -129,7 +129,8 @@ export default (state = initialState, action) => {
         if(!entry.enabled){
                 return {
                     ...state,
-                    graphData: state.graphData.filter((data)=> data.id !== entry.country)
+                    graphData: state.graphData.filter((data)=> data.id !== entry.country),
+                    mostAffectedCountry: getMostAffectedCountry(state.graphData.filter((data)=> data.id !== entry.country))
                 }
         }else{
             return{
@@ -137,7 +138,12 @@ export default (state = initialState, action) => {
                 graphData: [
                     ...state.graphData,
                     countryData
-                ]
+                ],
+                mostAffectedCountry: getMostAffectedCountry([
+                    ...state.graphData,
+                    countryData
+                ])
+
             }
         }
 
@@ -146,30 +152,40 @@ export default (state = initialState, action) => {
 
         start = parseInt(start)
         end = parseInt(end)
-        // console.log('filter by date called in reducer');
-        // console.log(start, end)
-
-        // let filteredGraphData = state.graphData.map((entry)=>{
-            // let filteredEntries = entry.data.filter((record)=>{
-                // return record.day >=start && record.day <= end   
-            // });
-            // return {
-                // id: entry.id,
-                // data:[
-                    // ...filteredEntries
-                // ]
-            // }   
-
-        // });
-
-        // console.log('filtered data', filteredGraphData);
-
         
+        let mostAffectedCountry = getMostAffectedCountry(filterGraphDataByDate(state.allData, start,end))['name'];
+
+        let mostAffectedCountryRawData = state.allData.find((entry)=> entry.country === mostAffectedCountry);
+
+        console.log('most affected Country data', mostAffectedCountryRawData);
+        
+        console.log('day', end);
+
+        let currentDayData = mostAffectedCountryRawData.records.find((entry)=> entry.day == end)
+
+        console.log('current Day Data', currentDayData);
 
         return {
             ...state,
             graphData: filterGraphDataByDate(state.allData, start,end),
-            mostAffectedCountry: getMostAffectedCountry(filterGraphDataByDate(state.allData, start,end))
+            mostAffectedCountry: mostAffectedCountry,
+            pieChartData: [
+                {
+                    id: "new",
+                    label: "New Case",
+                    value: currentDayData.new
+                },
+                {
+                    id: "death",
+                    label: "Deaths",
+                    value: currentDayData.death,
+                  },
+                {
+                    id: "recovery",
+                    label: "Recoveries",
+                    value: currentDayData.death,
+                } 
+            ]  
         }
 
     default:

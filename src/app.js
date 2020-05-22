@@ -4,6 +4,7 @@ import PieChart from "./core/PieChart";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./style.css";
 import InfectedCountries from './components/InfectedCountries';
+import MostAffectedCountry from './components/MostAffectedCountry';
 import CountryFilter from './components/CountryFilter';
 import DateFilter from './components/DateFilter';
 import { Provider } from 'react-redux';
@@ -15,7 +16,7 @@ const App = (props) => {
       <CountryFilter />
       <DateFilter />
       <InfectedCountries  />
-
+      <MostAffectedCountry />
 
     </Provider>
   );

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import { fetchData } from '../actions/caseDataActions';
-import LineChart from '../core/LineChart';
+import PieChart from '../core/PieChart';
 
 class MostAffectedCountry extends Component {
 
@@ -10,10 +10,13 @@ class MostAffectedCountry extends Component {
     }
 
     render() {
-        if(this.props.data != null){
+        if(this.props.pieChartData != null){
 
             return (
-                <LineChart data={this.props.data} />
+                <div>
+                    <h2>Most Affected Country: {this.props.country}</h2>
+                    <PieChart data={this.props.pieChartData} />
+                </div>
             ) ; 
         }else{
             return (
@@ -26,7 +29,8 @@ class MostAffectedCountry extends Component {
 function mapStateToProps(state) {
     console.log('state', state);
     return{
-        data: state.graphData
+        pieChartData: state.pieChartData,
+        country:state.mostAffectedCountry
     }
 }
 
