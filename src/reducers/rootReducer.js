@@ -27,7 +27,7 @@ function mapDataToLineGraphData(data){
     })
 }
 
-function filterGraphDataByDate(data){
+function filterGraphDataByDate(data, start, end){
     let graphData = mapDataToLineGraphData(data);
     return graphData.map((entry)=>{
         let filteredEntries = entry.data.filter((record)=>{
@@ -41,6 +41,12 @@ function filterGraphDataByDate(data){
         }   
 
     });
+}
+
+
+function getMostAffectCountry(data){
+    let graphData = mapDataToLineGraphData(data);
+    
 }
 
 export default (state = initialState, action) => {
@@ -98,27 +104,29 @@ export default (state = initialState, action) => {
 
         start = parseInt(start)
         end = parseInt(end)
-        console.log('filter by date called in reducer');
-        console.log(start, end)
+        // console.log('filter by date called in reducer');
+        // console.log(start, end)
 
-        let filteredGraphData = state.graphData.map((entry)=>{
-            let filteredEntries = entry.data.filter((record)=>{
-                return record.day >=start && record.day <= end   
-            });
-            return {
-                id: entry.id,
-                data:[
-                    ...filteredEntries
-                ]
-            }   
+        // let filteredGraphData = state.graphData.map((entry)=>{
+            // let filteredEntries = entry.data.filter((record)=>{
+                // return record.day >=start && record.day <= end   
+            // });
+            // return {
+                // id: entry.id,
+                // data:[
+                    // ...filteredEntries
+                // ]
+            // }   
 
-        });
-        console.log('filtered data', filteredGraphData);
+        // });
 
+        // console.log('filtered data', filteredGraphData);
+
+        
 
         return {
             ...state,
-            graphData:filteredGraphData
+            graphData: filterGraphDataByDate(state.allData, start,end)
         }
 
     default:
