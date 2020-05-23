@@ -122,8 +122,28 @@ const App = (props) => {
 
 
   const setupPieChartdata = () =>{
+    let mostAffectedCountryRawData = rawData.find((entry)=> entry.country === mostAffectedCountry);
+    if(mostAffectedCountryRawData != null){
+      let currentDayData = mostAffectedCountryRawData.records.find((entry)=> entry.day == endDate)
 
-    
+      setPieChartData([
+        {
+            id: "new",
+            label: "New Case",
+            value: currentDayData.new
+        },
+        {
+            id: "death",
+            label: "Deaths",
+            value: currentDayData.death,
+          },
+        {
+            id: "recovery",
+            label: "Recoveries",
+            value: currentDayData.death,
+        } 
+      ])
+    }
   }
 
 
@@ -146,6 +166,12 @@ const App = (props) => {
   },[startDate, endDate, enabledCountries])
 
 
+  useEffect(()=>{
+    setupPieChartdata()
+  },[mostAffectedCountry])
+
+
+
   return (
     <div>
       <CountryFilter countries={allCountries} enabledCountries={enabledCountries} setEnabledCountries={setEnabledCountries}/>
@@ -155,6 +181,10 @@ const App = (props) => {
       <h1>
       {mostAffectedCountry!= null? 'most affected country: ' + mostAffectedCountry : 'waiting for data'}
       </h1>
+
+      {
+        pieChartData != []? (<PieChart data = {pieChartData} />): (<p>waiting for data</p>)
+      }
 
     </div>
   );
