@@ -2,6 +2,10 @@ import React, {useEffect} from 'react'
 
 export default function DateFilter({setStartDate, setEndDate}) {
 
+    const labelStyle = {
+        margin:'8px'
+    }
+
     const getDateRange = ()=>{
         let range = [];
         for(let i=1; i<31;i++){
@@ -29,7 +33,7 @@ export default function DateFilter({setStartDate, setEndDate}) {
     return (
         <div>
             <h1>Date</h1>
-            <label>
+            <label style={labelStyle}>
                 Start Date
                 <select name="startDate" onChange={onChange}>
                     {getDateRange().map((i)=>(<option key={i}>{i}</option>)  )}
@@ -37,7 +41,7 @@ export default function DateFilter({setStartDate, setEndDate}) {
                 
             </label>
 
-            <label>
+            <label style={labelStyle}>
                 End Date
                 <select name="endDate" onChange={onChange}>
                     {getDateRange().map((i)=>(<option key={i}>{i}</option>)  )}

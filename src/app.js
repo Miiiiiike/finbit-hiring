@@ -84,6 +84,7 @@ const App = (props) => {
 
     var numberOfInfectionsToCountriesMap = {};
 
+    
     lineChartData.forEach((entry)=>{
 
         let reducedValue = entry.data.reduce((sum,current,i)=> {
@@ -147,6 +148,12 @@ const App = (props) => {
   }
 
 
+  const validateDateRange = ()=>{
+    if(startDate > endDate || endDate< startDate){
+      setLineChartData([])
+    }
+  }
+
 
 
 
@@ -170,24 +177,38 @@ const App = (props) => {
     setupPieChartdata()
   },[mostAffectedCountry])
 
+  useEffect(()=>{
+    validateDateRange()
+  },[startDate,endDate])
 
 
-  return (
-    <div>
-      <CountryFilter countries={allCountries} enabledCountries={enabledCountries} setEnabledCountries={setEnabledCountries}/>
-      <DateFilter setStartDate={setStartDate} setEndDate={setEndDate}/>
-      
-      <LineChart data={lineChartData}/>
-      <h1>
-      {mostAffectedCountry!= null? 'most affected country: ' + mostAffectedCountry : 'waiting for data'}
-      </h1>
+  if(rawData == []){
+    return  (<h1>wating for data</h1>)
+  }else{
+    return (
+      <div>
+        <CountryFilter countries={allCountries} enabledCountries={enabledCountries} setEnabledCountries={setEnabledCountries}/>
+        <DateFilter setStartDate={setStartDate} setEndDate={setEndDate}/>
+        
+        
+        <LineChart data = {lineChartData} />
+        
+        
+        {
+        mostAffectedCountry!= null? (
+          <div>
+            <h1>Most Affected Country: {mostAffectedCountry}</h1> <PieChart data = {pieChartData} />
+          </div>
+        ) : ''
+        }
+  
+        
+  
+      </div>
+    );
+  }
 
-      {
-        pieChartData != []? (<PieChart data = {pieChartData} />): (<p>waiting for data</p>)
-      }
-
-    </div>
-  );
+  
 };
 
 

@@ -24,11 +24,16 @@ const onChange = (country, enabledCountries, setEnabledCountries) =>{
 }
 
 export default function CountryFilter({countries, enabledCountries, setEnabledCountries}) {
+
+    const labelStyle = {
+        margin:'8px'
+    }
+
     return (
         <div>
             <h1>Countries</h1>
             { countries.map(country=> (
-                <label key={country}>
+                <label key={country} style={labelStyle}>
                     <input type="checkbox"  value={country} onChange={()=>{
                         onChange(country, enabledCountries, setEnabledCountries)
                     }}/>
@@ -37,4 +42,6 @@ export default function CountryFilter({countries, enabledCountries, setEnabledCo
             ))}
         </div>
     )
+
+    
 }
