@@ -11,7 +11,7 @@ const App = (props) => {
   const [enabledCountries, setEnabledCountries] = useState([]);
   const [startDate, setStartDate] = useState(1);
   const [endDate, setEndDate] = useState(1);
-  const [mostAffectedCountry, setMostAffectedCountry] = useState();
+  const [mostAffectedCountry, setMostAffectedCountry] = useState('');
   const [pieChartData, setPieChartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
 
@@ -78,13 +78,69 @@ const App = (props) => {
 
   }
 
+
+
+  const getMostAffectedCountry = () =>{
+
+    var numberOfInfectionsToCountriesMap = {};
+
+    lineChartData.forEach((entry)=>{
+
+        let reducedValue = entry.data.reduce((sum,current,i)=> {
+            return {y: sum.y + parseInt(current.y)}
+        })['y'];
+
+
+        numberOfInfectionsToCountriesMap =  {
+            ...numberOfInfectionsToCountriesMap,
+            [reducedValue]: entry.id
+            //infections: country name
+        };
+
+
+    })
+    if(numberOfInfectionsToCountriesMap !== {}){
+      
+      let maxNumberOfInfections = Math.max(
+          ...Object.keys(numberOfInfectionsToCountriesMap).map((val) => parseInt(val))
+      )
+      
+      let country = {
+          name: numberOfInfectionsToCountriesMap[maxNumberOfInfections],
+          infections: maxNumberOfInfections
+      };
+      console.log('country', country);
+
+      setMostAffectedCountry(country['name']);
+
+    }else{
+      setMostAffectedCountry('empty');
+    }
+
+
+  }
+
+
+  const setupPieChartdata = () =>{
+
+    
+  }
+
+
+
+
+
   //fetch app data
-  
   useEffect(()=>{
     fetchData();
   },[]);
 
+  useEffect(()=>{
+    getMostAffectedCountry()
+  },[lineChartData]);
 
+
+  //update line chart data on state changes in filters
   useEffect(()=>{
     setupLineChartData(rawData)
   },[startDate, endDate, enabledCountries])
@@ -96,7 +152,10 @@ const App = (props) => {
       <DateFilter setStartDate={setStartDate} setEndDate={setEndDate}/>
       
       <LineChart data={lineChartData}/>
-        
+      <h1>
+      {mostAffectedCountry!= null? 'most affected country: ' + mostAffectedCountry : 'waiting for data'}
+      </h1>
+
     </div>
   );
 };
@@ -104,8 +163,5 @@ const App = (props) => {
 
 
 
-const setLineChartData = ()=>{
-  
-}
 
 export default App;
