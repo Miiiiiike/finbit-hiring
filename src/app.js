@@ -11,7 +11,7 @@ const App = (props) => {
   const [enabledCountries, setEnabledCountries] = useState([]);
   const [startDate, setStartDate] = useState(1);
   const [endDate, setEndDate] = useState(1);
-  const [mostAffectedCountry, setMostAffectedCountry] = useState('');
+  const [mostAffectedCountry, setMostAffectedCountry] = useState();
   const [pieChartData, setPieChartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
 
@@ -26,7 +26,7 @@ const App = (props) => {
     })
     data = filterLineChartDataByDate(data)
 
-    data = filterDataByCountry(data)
+    data = filterLineChartDataByCountry(data)
     setLineChartData(data);
   }
 
@@ -55,7 +55,7 @@ const App = (props) => {
   }
 
 
-  const filterDataByCountry = (data)=>{
+  const filterLineChartDataByCountry = (data)=>{
     if(enabledCountries == []){
       return [];
     }else{
@@ -81,27 +81,21 @@ const App = (props) => {
 
 
   const getMostAffectedCountry = () =>{
-
     var numberOfInfectionsToCountriesMap = {};
 
-    
     lineChartData.forEach((entry)=>{
-
         let reducedValue = entry.data.reduce((sum,current,i)=> {
             return {y: sum.y + parseInt(current.y)}
         })['y'];
-
 
         numberOfInfectionsToCountriesMap =  {
             ...numberOfInfectionsToCountriesMap,
             [reducedValue]: entry.id
             //infections: country name
         };
-
-
     })
+
     if(numberOfInfectionsToCountriesMap !== {}){
-      
       let maxNumberOfInfections = Math.max(
           ...Object.keys(numberOfInfectionsToCountriesMap).map((val) => parseInt(val))
       )
@@ -117,7 +111,6 @@ const App = (props) => {
     }else{
       setMostAffectedCountry('empty');
     }
-
 
   }
 
@@ -147,7 +140,7 @@ const App = (props) => {
     }
   }
 
-
+  //checks the start & end dates' validity
   const validateDateRange = ()=>{
     if(startDate > endDate || endDate< startDate){
       setLineChartData([])
@@ -161,7 +154,8 @@ const App = (props) => {
   useEffect(()=>{
     fetchData();
   },[]);
-
+  
+  //listen to changes in line chart data and recalculate most affected country
   useEffect(()=>{
     getMostAffectedCountry()
   },[lineChartData]);
@@ -173,40 +167,48 @@ const App = (props) => {
   },[startDate, endDate, enabledCountries])
 
 
+  // listen to changes in mostAffectedCountry and update piechart data
   useEffect(()=>{
     setupPieChartdata()
   },[mostAffectedCountry])
 
+
+  //listen to changes in start date and end date and validate the user's entry
   useEffect(()=>{
     validateDateRange()
   },[startDate,endDate])
 
-
-  if(rawData == []){
-    return  (<h1>wating for data</h1>)
-  }else{
-    return (
-      <div>
-        <CountryFilter countries={allCountries} enabledCountries={enabledCountries} setEnabledCountries={setEnabledCountries}/>
-        <DateFilter setStartDate={setStartDate} setEndDate={setEndDate}/>
-        
-        
-        <LineChart data = {lineChartData} />
-        
-        
-        {
-        mostAffectedCountry!= null? (
-          <div>
-            <h1>Most Affected Country: {mostAffectedCountry}</h1> <PieChart data = {pieChartData} />
-          </div>
-        ) : ''
-        }
-  
-        
-  
-      </div>
-    );
+  const chartCotainerStyle = {
+    marginTop:'32pt'
   }
+  
+  return (
+    <div>
+      <CountryFilter countries={allCountries} enabledCountries={enabledCountries} setEnabledCountries={setEnabledCountries}/>
+      <DateFilter setStartDate={setStartDate} setEndDate={setEndDate}/>
+      
+      <div style={chartCotainerStyle}>
+        {lineChartData.length == 0?  (
+          <div>
+            <h1>No data to display</h1> 
+            <h3>Please select atleast 1 country</h3>
+
+          </div>
+        ):  (<LineChart data = {lineChartData} />)}
+      </div>
+      
+      {
+      mostAffectedCountry!= null? (
+        <div>
+          <h1>Most Affected Country</h1>
+          <h2>{mostAffectedCountry}</h2>
+            <PieChart data = {pieChartData} />
+        </div>
+      ) : ''
+      }
+
+    </div>
+  );
 
   
 };

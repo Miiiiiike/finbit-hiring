@@ -1,33 +1,35 @@
 import React from 'react'
 
 
-const onChange = (country, enabledCountries, setEnabledCountries) =>{
-    console.log('enabledCountries', enabledCountries)
-    
-    if(enabledCountries.includes(country)){
-        setEnabledCountries(
-            enabledCountries.filter(
-                ec => ec!== country
-            ),
-        )
-    }else{
-        setEnabledCountries(
-           [
-               ...enabledCountries,
-               country
-           ],
-           
-        )
-        // console.log('enabledCountries', enabledCountries)
-    }
-
-}
-
 export default function CountryFilter({countries, enabledCountries, setEnabledCountries}) {
 
     const labelStyle = {
-        margin:'8px'
+        margin:'8px',
+        fontWeight:'bold'
     }
+
+    const onChange = (country, enabledCountries, setEnabledCountries) =>{
+        console.log('enabledCountries', enabledCountries)
+        
+        if(enabledCountries.includes(country)){
+            setEnabledCountries(
+                enabledCountries.filter(
+                    ec => ec!== country
+                ),
+            )
+        }else{
+            setEnabledCountries(
+               [
+                   ...enabledCountries,
+                   country
+               ],
+               
+            )
+            // console.log('enabledCountries', enabledCountries)
+        }
+    
+    }
+
 
     return (
         <div>
